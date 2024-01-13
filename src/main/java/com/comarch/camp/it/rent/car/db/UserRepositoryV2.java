@@ -6,11 +6,11 @@ import com.comarch.camp.it.rent.car.model.User;
 import java.io.*;
 import java.util.HashMap;
 
-public class UserRepository implements IUserRepository {
+public class UserRepositoryV2 implements IUserRepository {
     private final HashMap<String, User> users = new HashMap<>();
-    private static final UserRepository instance = new UserRepository();
+    private static final UserRepositoryV2 instance = new UserRepositoryV2();
 
-    private UserRepository() {
+    private UserRepositoryV2() {
         try(BufferedReader reader =
                     new BufferedReader(new FileReader(Constants.USERS_FILE))) {
             String lineFromFile;
@@ -48,7 +48,7 @@ public class UserRepository implements IUserRepository {
         }
     }
 
-    public static UserRepository getInstance() {
+    public static UserRepositoryV2 getInstance() {
         return instance;
     }
 }

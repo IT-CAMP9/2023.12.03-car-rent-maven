@@ -1,6 +1,8 @@
 package com.comarch.camp.it.rent.car.gui;
 
 import com.comarch.camp.it.rent.car.authenticate.Authenticator;
+import com.comarch.camp.it.rent.car.db.IVehicleRepository;
+import com.comarch.camp.it.rent.car.db.VehicleRepository;
 import com.comarch.camp.it.rent.car.model.LuxuryCar;
 import com.comarch.camp.it.rent.car.model.User;
 import com.comarch.camp.it.rent.car.model.Vehicle;
@@ -8,10 +10,15 @@ import com.comarch.camp.it.rent.car.model.Vehicle;
 import java.util.Collection;
 import java.util.Scanner;
 
-public class GUI {
-    private static final Scanner scanner = new Scanner(System.in);
+public class GUI implements IGUI {
+    private final Scanner scanner = new Scanner(System.in);
+    private final IVehicleRepository vehicleRepository = VehicleRepository.getInstance();
+    private static final GUI instance = new GUI();
 
-    public static String showMenuAndReadChoose() {
+    private GUI() {}
+
+    @Override
+    public String showMenuAndReadChoose() {
         System.out.println("1. List cars");
         System.out.println("2. Rent car");
         System.out.println("3. Return car");
@@ -19,8 +26,9 @@ public class GUI {
         return scanner.nextLine();
     }
 
-    public static void printVehicles(Collection<Vehicle> vehicles) {
-        for(Vehicle vehicle : vehicles) {
+    @Override
+    public void printVehicles() {
+        for(Vehicle vehicle : vehicleRepository.getVehicles()) {
             if(vehicle instanceof LuxuryCar && !"ADMIN".equals(Authenticator.loggedUserRole)) {
                 continue;
             }
@@ -28,12 +36,14 @@ public class GUI {
         }
     }
 
-    public static String readPlate() {
+    @Override
+    public String readPlate() {
         System.out.println("Enter plate:");
         return scanner.nextLine();
     }
 
-    public static void showResult(boolean rentResult) {
+    @Override
+    public void showResult(boolean rentResult) {
         if(rentResult) {
             System.out.println("Success !!");
         } else {
@@ -41,14 +51,20 @@ public class GUI {
         }
     }
 
-    public static void showWrongChoose() {
+    @Override
+    public void showWrongChoose() {
         System.out.println("Wrong choose !!");
     }
 
-    public static User readLoginData() {
+    @Override
+    public User readLoginData() {
         System.out.println("Login:");
         String login = scanner.nextLine();
         System.out.println("Password:");
         return new User(login, scanner.nextLine());
+    }
+
+    public static GUI getInstance() {
+        return instance;
     }
 }

@@ -1,6 +1,6 @@
 package com.comarch.camp.it.rent.car.db;
 
-import com.comarch.camp.it.rent.car.Constants;
+import com.comarch.camp.it.rent.car.core.Constants;
 import com.comarch.camp.it.rent.car.authenticate.Authenticator;
 import com.comarch.camp.it.rent.car.model.*;
 
@@ -8,10 +8,11 @@ import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class VehicleRepository {
+public class VehicleRepository implements IVehicleRepository {
     private final HashMap<String, Vehicle> vehicles = new HashMap<>();
+    private static final VehicleRepository instance = new VehicleRepository();
 
-    public VehicleRepository() {
+    private VehicleRepository() {
         try(BufferedReader reader =
                     new BufferedReader(new FileReader(Constants.VEHICLES_FILE))) {
             String lineFromFile;
@@ -78,6 +79,7 @@ public class VehicleRepository {
         }
     }
 
+    @Override
     public boolean rentVehicle(String plate) {
         Vehicle vehicle = this.vehicles.get(plate);
         if(vehicle instanceof LuxuryCar &&
@@ -90,6 +92,8 @@ public class VehicleRepository {
         }
         return false;
     }
+
+    @Override
     public boolean returnVehicle(String plate) {
         Vehicle vehicle = this.vehicles.get(plate);
         if(vehicle instanceof LuxuryCar &&
@@ -103,10 +107,12 @@ public class VehicleRepository {
         return false;
     }
 
+    @Override
     public Collection<Vehicle> getVehicles() {
         return this.vehicles.values();
     }
 
+    @Override
     public void save() {
         try(BufferedWriter writer =
                     new BufferedWriter(new FileWriter(Constants.VEHICLES_FILE))) {
@@ -121,5 +127,9 @@ public class VehicleRepository {
         } catch (IOException e) {
             System.out.println("Vehicles file writing error !");
         }
+    }
+
+    public static VehicleRepository getInstance() {
+        return instance;
     }
 }
