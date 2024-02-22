@@ -3,16 +3,17 @@ package com.comarch.camp.it.rent.car.db;
 import com.comarch.camp.it.rent.car.core.Constants;
 import com.comarch.camp.it.rent.car.authenticate.Authenticator;
 import com.comarch.camp.it.rent.car.model.*;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 
+@Component
 public class VehicleRepository implements IVehicleRepository {
     private final HashMap<String, Vehicle> vehicles = new HashMap<>();
-    private static final VehicleRepository instance = new VehicleRepository();
 
-    private VehicleRepository() {
+    public VehicleRepository() {
         try(BufferedReader reader =
                     new BufferedReader(new FileReader(Constants.VEHICLES_FILE))) {
             String lineFromFile;
@@ -127,9 +128,5 @@ public class VehicleRepository implements IVehicleRepository {
         } catch (IOException e) {
             System.out.println("Vehicles file writing error !");
         }
-    }
-
-    public static VehicleRepository getInstance() {
-        return instance;
     }
 }

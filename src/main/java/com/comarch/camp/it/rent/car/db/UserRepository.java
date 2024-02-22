@@ -2,15 +2,16 @@ package com.comarch.camp.it.rent.car.db;
 
 import com.comarch.camp.it.rent.car.core.Constants;
 import com.comarch.camp.it.rent.car.model.User;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.HashMap;
 
+@Component
 public class UserRepository implements IUserRepository {
     private final HashMap<String, User> users = new HashMap<>();
-    private static final UserRepository instance = new UserRepository();
 
-    private UserRepository() {
+    public UserRepository() {
         try(BufferedReader reader =
                     new BufferedReader(new FileReader(Constants.USERS_FILE))) {
             String lineFromFile;
@@ -46,9 +47,5 @@ public class UserRepository implements IUserRepository {
         } catch (IOException e) {
             System.out.println("Users file writing error !");
         }
-    }
-
-    public static UserRepository getInstance() {
-        return instance;
     }
 }

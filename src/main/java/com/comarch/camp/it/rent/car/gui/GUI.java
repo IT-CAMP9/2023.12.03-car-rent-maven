@@ -6,16 +6,20 @@ import com.comarch.camp.it.rent.car.db.VehicleRepository;
 import com.comarch.camp.it.rent.car.model.LuxuryCar;
 import com.comarch.camp.it.rent.car.model.User;
 import com.comarch.camp.it.rent.car.model.Vehicle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Scanner;
 
+@Component
 public class GUI implements IGUI {
     private final Scanner scanner = new Scanner(System.in);
-    private final IVehicleRepository vehicleRepository = VehicleRepository.getInstance();
-    private static final GUI instance = new GUI();
+    private final IVehicleRepository vehicleRepository;
 
-    private GUI() {}
+    public GUI(IVehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
+    }
 
     @Override
     public String showMenuAndReadChoose() {
@@ -62,9 +66,5 @@ public class GUI implements IGUI {
         String login = scanner.nextLine();
         System.out.println("Password:");
         return new User(login, scanner.nextLine());
-    }
-
-    public static GUI getInstance() {
-        return instance;
     }
 }

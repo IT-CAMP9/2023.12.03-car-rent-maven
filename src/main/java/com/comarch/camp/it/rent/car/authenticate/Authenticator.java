@@ -5,14 +5,19 @@ import com.comarch.camp.it.rent.car.db.UserRepository;
 import com.comarch.camp.it.rent.car.db.UserRepositoryV2;
 import com.comarch.camp.it.rent.car.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Authenticator implements IAuthenticator {
-    private final IUserRepository userRepository = UserRepository.getInstance();
+    private final IUserRepository userRepository;
     private final String seed = "v_#(jxXlmQ+Eh&[k[^Xtu{26=;GT_cW${;KhjVQ.";
     public static String loggedUserRole;
-    private static final Authenticator instance = new Authenticator();
 
-    private Authenticator() {}
+    public Authenticator(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public boolean authenticate(String login, String password) {
@@ -23,9 +28,5 @@ public class Authenticator implements IAuthenticator {
             return true;
         }
         return false;
-    }
-
-    public static Authenticator getInstance() {
-        return instance;
     }
 }

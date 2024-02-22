@@ -1,5 +1,6 @@
 package com.comarch.camp.it.rent.car;
 
+import com.comarch.camp.it.rent.car.authenticate.Authenticator;
 import com.comarch.camp.it.rent.car.model.Car;
 import com.comarch.camp.it.rent.car.model.Vehicle;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -17,6 +18,8 @@ public class Test {
         System.out.println(vehicle.getClass().getSimpleName());
 
         System.out.println(Car.class.getSimpleName());
+
+        //Authenticator authenticator = new Authenticator();
 
     }
 }

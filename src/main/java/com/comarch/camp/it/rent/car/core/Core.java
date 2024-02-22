@@ -6,17 +6,23 @@ import com.comarch.camp.it.rent.car.db.*;
 import com.comarch.camp.it.rent.car.gui.GUI;
 import com.comarch.camp.it.rent.car.gui.IGUI;
 import com.comarch.camp.it.rent.car.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Core {
-    final IVehicleRepository baza = VehicleRepository.getInstance();
-    final IUserRepository userRepository = UserRepository.getInstance();
-    final IAuthenticator authenticator = Authenticator.getInstance();
-    final IGUI gui = GUI.getInstance();
+    private final IVehicleRepository baza;
+    private final IUserRepository userRepository;
+    private final IAuthenticator authenticator;
+    private final IGUI gui;
 
-    private static final Core instance = new Core();
-
-    private Core() {
-
+    public Core(IVehicleRepository baza, IUserRepository userRepository,
+                IAuthenticator authenticator, IGUI gui) {
+        this.baza = baza;
+        this.userRepository = userRepository;
+        this.authenticator = authenticator;
+        this.gui = gui;
     }
 
     public void start() {
@@ -41,7 +47,7 @@ public class Core {
     private void run() {
         boolean run = true;
         while(run) {
-            switch(gui.showMenuAndReadChoose()) {
+            /*switch(gui.showMenuAndReadChoose()) {
                 case "1":
                     gui.printVehicles();
                     break;
@@ -59,11 +65,18 @@ public class Core {
                 default:
                     gui.showWrongChoose();
                     break;
+            }*/
+            switch(gui.showMenuAndReadChoose()) {
+                case "1" -> gui.printVehicles();
+                case "2" -> gui.showResult(baza.rentVehicle(gui.readPlate()));
+                case "3" -> gui.showResult(baza.returnVehicle(gui.readPlate()));
+                case "4" -> {
+                    run = false;
+                    userRepository.save();
+                    baza.save();
+                }
+                default -> gui.showWrongChoose();
             }
         }
-    }
-
-    public static Core getInstance() {
-        return instance;
     }
 }
